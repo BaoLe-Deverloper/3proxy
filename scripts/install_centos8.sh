@@ -54,29 +54,23 @@ setgid 65535
 setuid 65535
 stacksize 6291456 
 flush
-auth strong
-
-$(awk -F "/" '{print "auth none\n" \
-"proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
-"flush\n"}' ${WORKDATA})
+auth none
+$(awk -F "/" '{print "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n"}' ${WORKDATA})
 EOF
 }
 
 gen_proxy_file_for_user() {
     cat >proxy.txt <<EOF
-$(awk -F "/" '{print $3 ":" $4 " }' ${WORKDATA})
+$(awk -F "/" '{print $3 ":" $4" }' ${WORKDATA})
 EOF
 }
 
 upload_proxy() {
     cd $WORKDIR
-    local PASS=$(random)
-    zip --password $PASS proxy.zip proxy.txt
-    URL=$(curl -F "file=@proxy.zip" https://file.io)
-
+    URL=$(curl -F "file=@proxy.txt" https://file.io)
     echo "Proxy is ready! Format IP:PORT:LOGIN:PASS"
-    echo "Download zip archive from: ${URL}"
-    echo "Password: ${PASS}"
+    echo "Download zip Tu link: ${URL}"
+
 
 }
 gen_data() {
